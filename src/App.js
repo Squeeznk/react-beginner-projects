@@ -49,7 +49,9 @@ function getStyle( snapshot, style) {
   if (!snapshot.isDropAnimating) {
     return {
       ...style,
-      background: snapshot.isDragging ? "lightgreen" : "#FFFFFF",
+      background: snapshot.isDragging ? 
+      "repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5) 15px, rgba(254, 213, 227, 0.5) 0, rgba(254, 213, 227, 0.5) 30px)" : 
+      "#FFFFFF",
     }
   }
 
