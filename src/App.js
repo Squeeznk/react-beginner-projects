@@ -36,57 +36,33 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 
   return result;
 };
-const grid = 18;
+
+const grid = 8;
 
 const getListStyle = isDraggingOver => ({
   background: isDraggingOver ? "#E3E6EF" : "#F6F7FA",
   padding: grid,
-  width: 300
+  width: 290,
 });
 
-function getStyle(style, snapshot) {
+function getStyle( snapshot, style) {
   if (!snapshot.isDropAnimating) {
     return {
       ...style,
       background: snapshot.isDragging ? "lightgreen" : "#FFFFFF",
-      userSelect: "none",
-      padding: grid,
-      margin: `0 0 ${grid}px 0`,
-      gap: 10,
-      width: 275,
-      height: 180,
-      'box-shadow': '1px 2px 8px rgba(0, 0, 0, 0.06)',
-      'border-radius': '10px',
     }
   }
-
-  const { moveTo, curve, duration } = snapshot.dropAnimation;
-  // move to the right spot
-  const translate = `translate(${moveTo.x}px, ${moveTo.y}px)`;
-  // add a bit of turn for fun
-  //const rotate = 'rotate(1turn)';
 
   // patching the existing style
   return {
     ...style,
-    background: '#EBE7FF',
-    userSelect: "none",
-    padding: grid,
-    margin: `0 0 ${grid}px 0`,
-    gap: 10,
-    width: 275,
-    height: 180,
-    'box-shadow': '1px 2px 8px rgba(0, 0, 0, 0.06)',
-    'border-radius': '10px',
-    //transform: `${translate} ${rotate}`,
-    transform: `${translate}`,
-    // slowing down the drop because we can
-    transition: `all ${curve} ${duration+0.3}s`,
+    background: '#lightgreen',
+
   };
 }
 
 function App() {
-  //const [state, setState] = React.useState([getItems(3), getItems(5, 3)]);
+  
   const [state, setState] = React.useState([getItems(3),getItems(5,4)]);
 
   function onDragEnd(result) {
@@ -114,10 +90,6 @@ function App() {
     }
   }
 
-  const printState = () => {
-    console.log(state);
-  }
-
   const addTask = ([key]) => {
     const ar = Array.from(state);
     ar[key] = [ {
@@ -129,17 +101,6 @@ function App() {
   }
 
 
-  const kanbanCardData = {
-    textLabel1: "Доработки отчёта по срокампросрочки КРІ", 
-    textLabel2: "Отчёт по срокам и типам заданий для исполнения KPI (АК)", 
-    notificationNumber1: "20/20", 
-    notificationNumber2: "20", 
-    notificationNumber3: "20 / 2", 
-    address: "23 фев.", 
-    ellipse1: "./ellipse-1.png", 
-    ellipse2: "./ellipse-2.png", 
-  };
-
   return (
     <div>
       <Button btnStyle="primary" type="button" onClick={() => {setState([...state, []]);}}>
@@ -148,9 +109,6 @@ function App() {
       <Button btnStyle="primary" type="button" onClick={() => {setState([...state, getItems(1)]);}}>
         Добавить задачу
       </Button>
-      <Button btnStyle="primary" type="button" onClick={printState}>
-        Показать state
-      </Button>
 
 
       <div style={{ display: "flex" }}>
@@ -158,11 +116,13 @@ function App() {
           {state.map((el, ind) => (
             <Droppable key={ind} droppableId={`${ind}`}>
               {(provided, snapshot) => (
-                <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)} {...provided.droppableProps}>
+                <div className="card-container" ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)} {...provided.droppableProps}>
                  <Button btnStyle="primary" type="button" onClick={() => (addTask([ind]))}>
                    +
                  </Button> 
-                 <KanbanCard {kanbanCardData}/>
+
+                 
+
                  {el.map((item, index) => (
                     <Draggable key={item.id} draggableId={item.id} index={index}>
                       {(provided, snapshot) => (
@@ -170,37 +130,27 @@ function App() {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          style={getStyle(provided.draggableProps.style, snapshot)}
                         >
-                          <div style={{display: "flex", gap:10, "flex-direction": "column", "align-items": "flex-start"}}>
-                            <div className="card-head">
-                              Доработки отчёта по срокам просрочки KPI
-                            </div>
-                            <div className="card-content">
-                            {item.content} - При создании списка выполненных работ необходимо добавить, чтобы учитывалась доска проекта 
-                            </div>
-                            <div className="tags-container">
-                              <div className="tag" style={{ "background-color": "#FED5E3"}}></div>
-                              <div className="tag" style={{ "background-color": "#EBE7FF"}}></div>
-                              <div className="tag" style={{ "background-color": "#DAF8E7"}}></div>
-                              <div className="tag" style={{ "background-color": "#D8F1FF"}}></div>
-                              <div className="tag" style={{ "background-color": "#B9EFFF"}}></div>
-                            </div>
-                            <div style={{flex: "none", "align-self": "stretch", "flex-grow": 0}}>
-                            <Button btnStyle="danger" 
-                              type="button"
-                              onClick={() => {
-                                const newState = [...state];
-                                newState[ind].splice(index, 1);
-                                setState(
-                                  newState.filter(group => group.length)
-                                );
-                              }}
-                            >
-                              Удалить
-                            </Button>
-                            </div>
-                          </div>
+                           <KanbanCard 
+                              style={getStyle(snapshot)} 
+                              textLabel1 = "Доработки отчёта по срокам просрочки КРІ" 
+                              textLabel2 = '{${item.content}}Отчёт по срокам и типам заданий для исполнения KPI'
+                              notificationNumber1= "20/20"  
+                              notificationNumber2= "20" 
+                              notificationNumber3= "20 / 2" 
+                              address= "23 фев." 
+                              ellipse1= "./ellipse-1.png"  
+                              ellipse2=  "./ellipse-2.png"                  
+                            />
+                            {
+                            // <Button btnStyle="danger" type="button" onClick={() => {
+                            //     const newState = [...state];
+                            //     newState[ind].splice(index, 1);
+                            //     setState(newState.filter(group => group.length));
+                            //   }}>
+                            //   Удалить
+                            // </Button>
+                            }
                         </div>
                       )}
                     </Draggable>
