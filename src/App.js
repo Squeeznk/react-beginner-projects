@@ -137,7 +137,7 @@ function App() {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
-                           {/* <KanbanCard 
+                           <KanbanCard 
                               style={getStyle(snapshot)} 
                               head = "Доработки отчёта по срокам просрочки КРІ" 
                               content = '{${item.content}} Отчёт по срокам и типам заданий для исполнения KPI'
@@ -148,8 +148,8 @@ function App() {
                               date2= "27 фев."
                               date3= "3 мар." 
                               useravatar1= "./ellipse-1.png"  
-                              useravatar2=  "./ellipse-2.png"                  
-                            /> */}
+                              useravatar2=  "./ellipse-2.png"   
+                              />               
                             {
                             // <Button btnStyle="danger" type="button" onClick={() => {
                             //     const newState = [...state];
@@ -159,31 +159,6 @@ function App() {
                             //   Удалить
                             // </Button>
                             }
-
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-around",
-                              padding: "32px",
-                              "border-style": "dashed"
-                            }}
-                          >
-                            {item.content}
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const newState = [...state];
-                                newState[ind].splice(index, 1);
-                                setState(
-                                  newState.filter(group => group.length)
-                                );
-                              }}
-                            >
-                              delete
-                            </button>
-                          </div>
-
-
                         </div>
                       )}
                     </Draggable>
