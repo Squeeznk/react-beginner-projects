@@ -6,11 +6,13 @@ import { Button } from '@trendmicro/react-buttons';
 import KanbanCard from './KanbanCard.js';
 
 // fake data generator
-const getItems = (count, offset = 0) =>
-  Array.from({ length: count }, (v, k) => k).map(k => ({
+const getItems = (count, offset = 0) => {
+  const ar = Array.from({ length: count }, (v, k) => k).map(k => ({
     id: `item-${k + offset}-${new Date().getTime()}`,
     content: `Задача ${k + offset}`
   }));
+  return ar;
+};
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -65,7 +67,7 @@ function getStyle( snapshot, style) {
 
 function App() {
   
-  const [state, setState] = React.useState([getItems(3),getItems(5,4)]);
+  const [state, setState] = React.useState([]);
 
   function onDragEnd(result) {
     const { source, destination } = result;
@@ -102,7 +104,6 @@ function App() {
     setState(ar);
   }
 
-
   return (
     <div>
       <Button btnStyle="primary" type="button" onClick={() => {setState([...state, []]);}}>
@@ -111,12 +112,15 @@ function App() {
       <Button btnStyle="primary" type="button" onClick={() => {setState([...state, getItems(1)]);}}>
         Добавить задачу
       </Button>
+      <Button btnStyle="primary" type="button" onClick={() => {setState([...state, getItems(100)]);}}>
+        Генерировать
+      </Button>
 
 
       <div style={{ display: "flex" }}>
         <DragDropContext onDragEnd={onDragEnd}>
           {state.map((el, ind) => (
-            <Droppable key={ind} droppableId={`${ind}`}>
+            <Droppable key={ind} droppableId={`${ind}`} style="overflow: auto">
               {(provided, snapshot) => (
                 <div className="card-container" ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)} {...provided.droppableProps}>
                  <Button btnStyle="primary" type="button" onClick={() => (addTask([ind]))}>
@@ -133,17 +137,19 @@ function App() {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                         >
-                           <KanbanCard 
+                           {/* <KanbanCard 
                               style={getStyle(snapshot)} 
-                              textLabel1 = "Доработки отчёта по срокам просрочки КРІ" 
-                              textLabel2 = '{${item.content}}Отчёт по срокам и типам заданий для исполнения KPI'
+                              head = "Доработки отчёта по срокам просрочки КРІ" 
+                              content = '{${item.content}} Отчёт по срокам и типам заданий для исполнения KPI'
                               notificationNumber1= "20/20"  
                               notificationNumber2= "20" 
                               notificationNumber3= "20 / 2" 
-                              address= "23 фев." 
-                              ellipse1= "./ellipse-1.png"  
-                              ellipse2=  "./ellipse-2.png"                  
-                            />
+                              date1= "23 фев."
+                              date2= "27 фев."
+                              date3= "3 мар." 
+                              useravatar1= "./ellipse-1.png"  
+                              useravatar2=  "./ellipse-2.png"                  
+                            /> */}
                             {
                             // <Button btnStyle="danger" type="button" onClick={() => {
                             //     const newState = [...state];
@@ -153,6 +159,31 @@ function App() {
                             //   Удалить
                             // </Button>
                             }
+
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-around",
+                              padding: "32px",
+                              "border-style": "dashed"
+                            }}
+                          >
+                            {item.content}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newState = [...state];
+                                newState[ind].splice(index, 1);
+                                setState(
+                                  newState.filter(group => group.length)
+                                );
+                              }}
+                            >
+                              delete
+                            </button>
+                          </div>
+
+
                         </div>
                       )}
                     </Draggable>

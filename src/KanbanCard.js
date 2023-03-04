@@ -1,25 +1,20 @@
 import React from "react";
 
 
-function KanbanCard({
+const KanbanCard = ({
     style,
-    textLabel1,
-    textLabel2,
-    notificationNumber1,
-    notificationNumber2,
-    notificationNumber3,
-    address,
-    ellipse1,
-    ellipse2,
-}) {
-
-    return (
+    head,
+    content,
+    notificationNumber1, notificationNumber2, notificationNumber3,
+    date1, date2, date3, 
+    useravatar1, useravatar2,
+}) => (
         <div className="kanban-card" style={style}>
             <p className="text_header"> 
-                {textLabel1}
+                {head}
             </p>
             <p className="text_content">
-                {textLabel2}
+                {content}
             </p>
             <div className="tags">
                 <div className="rectangle-44"></div>
@@ -59,28 +54,25 @@ function KanbanCard({
         </div>
 
         <footer className="footer">
-            <Date className="starting" content={address}/>
-            <Date className="ending" content={address}/>
-            <Date className="deadline" content={address}/>
+            <Date className="starting" content={date1}/>
+            <Date className="ending" content={date2}/>
+            <Date className="deadline" content={date3}/>
 
             <div className="members">
-                <img className="ellipse-1" src={ellipse1} alt="Ellipse 1" /> 
-                <img className="ellipse-2" src={ellipse2} alt="Ellipse 2" />
+                <img className="ellipse-1" src={useravatar1} alt="Ellipse 1" /> 
+                <img className="ellipse-2" src={useravatar2} alt="Ellipse 2" />
             </div>
         </footer>
     </div>
-    )
-}
+);
 
-function Date(props){
-    const {className, content} = props;
-    return (
+const Date = ({className, content}) => (
         <div className={`date-badge ${className || ""}` }>
             <div className="badge_text --font-family-roboto --font-size-xs">
                 {content}
             </div>
         </div>
-    );
-}
+);
+
 
 export default KanbanCard;
